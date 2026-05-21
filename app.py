@@ -6,7 +6,8 @@ from pdf_generator import (
     generate_internship_certificate,
     generate_nda,
     generate_experience_letter,
-    generate_relieving_letter
+    generate_relieving_letter,
+    number_to_words
 )
 from email_sender import send_document_email
 
@@ -164,9 +165,9 @@ if "company_address" not in st.session_state:
 if "company_cin" not in st.session_state:
     st.session_state.company_cin = "U85500UP2024PTC212408"
 if "signer_name" not in st.session_state:
-    st.session_state.signer_name = "Ahreen Yusufzai"
+    st.session_state.signer_name = "Pranay Shrivastava"
 if "signer_designation" not in st.session_state:
-    st.session_state.signer_designation = "Digital Marketing Specialist"
+    st.session_state.signer_designation = "Director"
 if "reporting_manager" not in st.session_state:
     st.session_state.reporting_manager = "CEO, Mr Pranay Shrivastava"
 
@@ -293,14 +294,10 @@ with col_form:
         with col_s2:
             paid_days = st.text_input("Paid Days / Total Days", value="30")
             
-        # Bank Details
-        st.markdown("<p style='font-size: 12px; font-weight:600; color: #4B5563; margin-bottom: 0;'>Bank Information</p>", unsafe_allow_html=True)
-        col_bank1, col_bank2 = st.columns(2)
-        with col_bank1:
-            bank_name = st.text_input("Bank Name", value="HDFC Bank")
-            bank_account = st.text_input("Account Number", value="5010049281726")
-        with col_bank2:
-            ifsc_code = st.text_input("IFSC Code", value="HDFC0000161")
+        # Bank Details (Removed)
+        bank_name = ""
+        bank_account = ""
+        ifsc_code = ""
             
         # Salary breakdown
         st.markdown("<p style='font-size: 12px; font-weight:600; color: #4B5563; margin-bottom: 0;'>Earnings Breakdown (INR)</p>", unsafe_allow_html=True)
@@ -567,12 +564,8 @@ with col_preview:
                     <td><b>Designation:</b></td><td>{employee_role}</td>
                 </tr>
                 <tr>
-                    <td><b>Bank Name:</b></td><td>{bank_name}</td>
                     <td><b>Paid Days:</b></td><td>{paid_days}</td>
-                </tr>
-                <tr>
-                    <td><b>Bank A/C No:</b></td><td>{bank_account}</td>
-                    <td><b>IFSC Code:</b></td><td>{ifsc_code}</td>
+                    <td></td><td></td>
                 </tr>
             </table>
             
@@ -616,7 +609,12 @@ with col_preview:
             <table style="width:100%; border:none; font-size:11px; margin-top:20px;">
                 <tr>
                     <td style="width:50%;">_____________________________<br/>Employee Signature</td>
-                    <td style="text-align:right; width:50%;">_____________________________<br/>Authorized Signatory</td>
+                    <td style="text-align:right; width:50%;">
+                        _____________________________<br/>
+                        <b>Authorized Signatory</b><br/>
+                        <span style="font-weight:600; color:#111827;">{st.session_state.signer_name}</span><br/>
+                        <span style="font-size:9.5px; color:#6B7280;">{st.session_state.signer_designation}</span>
+                    </td>
                 </tr>
             </table>
         </div>

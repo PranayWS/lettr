@@ -339,7 +339,7 @@ def generate_salary_slip(data, logo_bytes=None, logo_ext="png"):
     
     # Grid background rect
     start_y = pdf.get_y()
-    pdf.rect(20, start_y, 170, 36, 'DF')
+    pdf.rect(20, start_y, 170, 28, 'DF')
     
     # Populate Employee Details
     pdf.set_y(start_y + 3)
@@ -347,8 +347,7 @@ def generate_salary_slip(data, logo_bytes=None, logo_ext="png"):
     details = [
         [("Employee Name:", data.get('employee_name', 'N/A')), ("Joining Date:", data.get('joining_date', 'N/A'))],
         [("Employee ID:", data.get('employee_id', 'EMP-LETTR-01')), ("Designation / Role:", data.get('role', 'N/A'))],
-        [("Bank Name:", data.get('bank_name', 'N/A')), ("Paid Days:", data.get('paid_days', '30'))],
-        [("Bank A/C No:", data.get('bank_account', 'N/A')), ("IFSC Code:", data.get('ifsc', 'N/A'))]
+        [("Paid Days:", data.get('paid_days', '30')), ("", "")]
     ]
     
     for row in details:
@@ -502,9 +501,15 @@ def generate_salary_slip(data, logo_bytes=None, logo_ext="png"):
     pdf.ln(6)
     pdf.set_font('helvetica', '', 10)
     pdf.cell(110, 5, "Employee Signature", align='L')
-    pdf.cell(60, 5, "Authorized Signatory", align='R')
+    pdf.cell(60, 5, "Authorized Signatory", align='R', new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     
-    pdf.ln(10)
+    # Print the signer details aligned to the right, matching Authorized Signatory
+    pdf.set_font('helvetica', 'B', 9)
+    pdf.cell(170, 4.5, data.get('signer_name', 'Authorized Signatory'), align='R', new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_font('helvetica', '', 8.5)
+    pdf.cell(170, 4, data.get('signer_designation', 'Director'), align='R', new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    
+    pdf.ln(2)
     pdf.set_font('helvetica', 'I', 8)
     pdf.set_text_color(156, 163, 175)
     pdf.cell(0, 4, "This is a computer-generated salary slip and does not require a physical signature.", align='C')
