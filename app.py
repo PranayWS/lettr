@@ -310,7 +310,7 @@ with col_form:
             spec_sal = st.number_input("Special Allowance", value=1000, step=100)
             
         st.markdown("<p style='font-size: 12px; font-weight:600; color: #4B5563; margin-bottom: 0;'>Deductions Breakdown (INR)</p>", unsafe_allow_html=True)
-        col_d1, col_d2 = st.columns(3)
+        col_d1, col_d2, col_d3 = st.columns(3)
         with col_d1:
             pf_ded = st.number_input("PF Deduct", value=0, step=50)
         with col_d2:
