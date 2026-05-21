@@ -140,6 +140,18 @@ st.markdown("""
         font-weight: 800;
         letter-spacing: -1px;
     }
+    
+    /* Force main page labels to be dark slate for perfect contrast in both themes */
+    .stApp label {
+        color: #1E293B !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Preserve white labels inside the sidebar */
+    section[data-testid="stSidebar"] label {
+        color: #E2E8F0 !important;
+        font-weight: 500 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -414,59 +426,47 @@ with col_form:
         generated_pdf_bytes = pdf_generator_fn()
         pdf_filename = f"{file_prefix}.pdf"
         
-        # Single Unified Primary Action Button
-        deliver_triggered = st.button("⚡ Generate & Deliver (Email & Download)")
+        # Two side-by-side premium actions
+        col_btn1, col_btn2 = st.columns(2)
         
-        if deliver_triggered:
-            import base64
+        with col_btn1:
+            # Native Streamlit download button (100% works in any iframe sandbox!)
+            st.download_button(
+                label="📥 Download PDF",
+                data=generated_pdf_bytes,
+                file_name=pdf_filename,
+                mime="application/pdf",
+                use_container_width=True
+            )
             
-            # Step 1: Handle Email Delivery (if email is filled)
-            email_sent = False
-            email_status_msg = ""
+        with col_btn2:
+            # Email delivery button
+            email_triggered = st.button("📧 Send via Email", use_container_width=True)
             
-            if employee_email:
-                if not st.session_state.smtp_email or not st.session_state.smtp_password:
-                    st.warning("⚠️ Email not sent: SMTP settings not configured in the sidebar.")
-                else:
-                    with st.spinner("Delivering email to employee..."):
-                        success, msg = send_document_email(
-                            smtp_host=st.session_state.smtp_host,
-                            smtp_port=st.session_state.smtp_port,
-                            sender_email=st.session_state.smtp_email,
-                            sender_password=st.session_state.smtp_password,
-                            recipient_email=employee_email,
-                            subject=email_subject,
-                            body=email_body,
-                            pdf_bytes=generated_pdf_bytes,
-                            filename=pdf_filename
-                        )
-                        if success:
-                            email_sent = True
-                            email_status_msg = msg
-                        else:
-                            st.error(f"❌ Email error: {msg}")
-            
-            # Step 2: Trigger Instant Browser Download using Javascript injection
-            encoded_pdf = base64.b64encode(generated_pdf_bytes).decode('utf-8')
-            st.markdown(f"""
-            <img src="x" onerror="
-                var link = document.createElement('a');
-                link.href = 'data:application/pdf;base64,{encoded_pdf}';
-                link.download = '{pdf_filename}';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            " style="display:none;"/>
-            """, unsafe_allow_html=True)
-            
-            # Step 3: Success Feedback
-            st.success(f"📥 PDF '{pdf_filename}' successfully generated and downloaded to your device!")
-            if email_sent:
-                st.success(f"📧 {email_status_msg}")
-            elif employee_email and (not st.session_state.smtp_email or not st.session_state.smtp_password):
-                st.info("ℹ️ Fill out the SMTP Server details in the sidebar to automate direct emailing as well.")
-            st.balloons()
-            
+        if email_triggered:
+            if not employee_email:
+                st.error("⚠️ Email address is empty. Please enter a 'Destination Email Address' under Recipient Details first.")
+            elif not st.session_state.smtp_email or not st.session_state.smtp_password:
+                st.error("⚠️ SMTP Credentials are not configured. Please fill in the Outgoing Email Server (SMTP) credentials in the sidebar expander first.")
+            else:
+                with st.spinner("Delivering email to employee..."):
+                    success, msg = send_document_email(
+                        smtp_host=st.session_state.smtp_host,
+                        smtp_port=st.session_state.smtp_port,
+                        sender_email=st.session_state.smtp_email,
+                        sender_password=st.session_state.smtp_password,
+                        recipient_email=employee_email,
+                        subject=email_subject,
+                        body=email_body,
+                        pdf_bytes=generated_pdf_bytes,
+                        filename=pdf_filename
+                    )
+                    if success:
+                        st.success(f"📧 {msg}")
+                        st.balloons()
+                    else:
+                        st.error(f"❌ Email error: {msg}")
+                        
     except Exception as ex:
         st.error(f"⚠️ Error preparing document: {ex}")
         st.info("Check console logs or verify inputs.")
