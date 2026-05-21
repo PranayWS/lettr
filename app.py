@@ -635,7 +635,7 @@ with col_preview:
             
             <p>Dear {employee_name},</p>
             
-            <p>We are pleased to offer you a <b>{duration}</b> Internship at <b>{st_session_state.company_name}</b> reporting to <b>{reporting_manager}</b>. Looking forward to working as a team.</p>
+            <p>We are pleased to offer you a <b>{duration}</b> Internship at <b>{st.session_state.company_name}</b> reporting to <b>{reporting_manager}</b>. Looking forward to working as a team.</p>
             
             <p>We expect you to join on <b>{joining_date}</b> and your job responsibilities will be as discussed and mutually agreed upon.</p>
             
@@ -649,7 +649,7 @@ with col_preview:
         elif selected_doc == "Non-Disclosure Agreement (NDA)":
             body_text = f"""
             <h4 style="text-align:center; color:#7C3AED;">EMPLOYEE NON-DISCLOSURE AGREEMENT</h4>
-            <p>This Non-Disclosure Agreement (the "Agreement") is entered into on this <b>{doc_date}</b> by and between <b>{st_session_state.company_name}</b> (referred to as "Employer") and <b>{employee_name}</b> (referred to as "Employee").</p>
+            <p>This Non-Disclosure Agreement (the "Agreement") is entered into on this <b>{doc_date}</b> by and between <b>{st.session_state.company_name}</b> (referred to as "Employer") and <b>{employee_name}</b> (referred to as "Employee").</p>
             
             <p><b>1. Definition of Confidential Information:</b> For purposes of this Agreement, "Confidential Information" shall include all information or material that has or could have commercial value or other utility in the business in which Employer is engaged, including trade secrets, software code, customer data, and strategical plans.</p>
             
@@ -663,7 +663,7 @@ with col_preview:
             body_text = f"""
             <p style="text-align: right;">Date: {doc_date}</p>
             
-            <p>This is to certify that <b>{employee_name}</b> has been employed / engaged with <b>{st_session_state.company_name}</b> in the capacity of <b>{employee_role}</b> from <b>{joining_date}</b> to <b>{relieving_date}</b>.</p>
+            <p>This is to certify that <b>{employee_name}</b> has been employed / engaged with <b>{st.session_state.company_name}</b> in the capacity of <b>{employee_role}</b> from <b>{joining_date}</b> to <b>{relieving_date}</b>.</p>
             
             <p>During the tenure of their engagement, we found them to be extremely diligent, highly motivated, and sincere in their duties. They managed their responsibilities professionally and proved to be an excellent team player.</p>
             
@@ -681,7 +681,7 @@ with col_preview:
             <p>Dear {employee_name},</p>
             <p><b>Subject: Resignation Acceptance & Relieving from services as {employee_role}</b></p>
             
-            <p>This is in reference to your formal resignation letter dated <b>{resignation_dt}</b>. We wish to inform you that your resignation has been accepted by the management and you are officially relieved of your duties as <b>{employee_role}</b> at <b>{st_session_state.company_name}</b> at the close of business hours on <b>{relieving_date}</b>.</p>
+            <p>This is in reference to your formal resignation letter dated <b>{resignation_dt}</b>. We wish to inform you that your resignation has been accepted by the management and you are officially relieved of your duties as <b>{employee_role}</b> at <b>{st.session_state.company_name}</b> at the close of business hours on <b>{relieving_date}</b>.</p>
             
             <p>We further confirm that you have returned all company property, assets, and credentials under your custody. Your Full & Final Settlement accounts have been settled successfully and no dues remain outstanding.</p>
             
